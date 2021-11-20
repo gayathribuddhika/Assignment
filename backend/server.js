@@ -1,16 +1,17 @@
 const express = require('express');
+const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-const app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(cors());
 app.use(express.json());
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-require("./config/db");
+require('./config/db');
 
-const port = 8090;
+
+const port = 8085;
 app.listen(port, () => {
     console.log('Server started on http://localhost:' + port);
 });
