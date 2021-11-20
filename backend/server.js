@@ -10,6 +10,8 @@ app.use(bodyParser.json());
 
 require('./config/db');
 
+const user = require('./routes/user');
+app.use('/', user);
 
 const port = 8085;
 app.listen(port, () => {
