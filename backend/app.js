@@ -1,28 +1,23 @@
 // import
 const express = require('express');
-const cors = require('cors');
 const bodyParser = require('body-parser');
 const HttpError = require('./models/http-error');
 const mongoose = require("mongoose");
 const msg = require('./constants/message');
 const codes = require('./constants/common');
 
-require("dotenv").config();
+const userRoutes = require('./routes/user_route');
 
 const app = express();
-const port = process.env.PORT || 5000;
 
 // middlewares
-app.use(express.json());
-app.use(cors());
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // router prefix
-app.use("/api/user", require("./routes/user_route"));
+app.use('/api/users', userRoutes);
 
 app.use((req, res, next) => {
-  const error = new HttpError(msg.STATUS_MESSAGE.NotFound, errorCode.STATUS_CODE.NotFound);
+  const error = new HttpError(msg.STATUS_MESSAGE.NotfoundRoute, codes.STATUS_CODE.NotFound);
   throw error;
 });
 
@@ -35,14 +30,16 @@ app.use((error, req, res, next) => {
 });
 
 // database connection
+require("dotenv").config();
+const port = process.env.PORT || 5000;
+
 mongoose
   .connect(process.env.DB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    // useFindAndModify: true,
-    // useCreateIndex: true,
+    useCreateIndex: true,
   })
-  .then(() => console.log("Database Connected Successfully!!"))
+  .then(() => console.log(msg.STATUS_MESSAGE.DB_CONN))
   .catch((err) => console.log(err));
 
 

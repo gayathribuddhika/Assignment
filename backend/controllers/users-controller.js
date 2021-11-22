@@ -5,9 +5,9 @@ const msg = require("../constants/message");
 
 const User = require("../models/user");
 
-const creatUser = async (req, res, next) => {
+const createUser = async (req, res, next) => {
   const errors = validationResult(req);
-  if (errors.isEmpty()) {
+  if (!errors.isEmpty()) {
     return next(
       new HttpError(
         msg.STATUS_MESSAGE.InvalidInput,
@@ -66,6 +66,9 @@ const creatUser = async (req, res, next) => {
     return next(error);
   }
 
+  // password encryption
+
+  // creatting a new user
   const createdUser = new User({
     firstName,
     lastName,
@@ -88,3 +91,5 @@ const creatUser = async (req, res, next) => {
 
   res.status(codes.STATUS_CODE.Success).json({ user: createdUser });
 };
+
+exports.createUser = createUser;

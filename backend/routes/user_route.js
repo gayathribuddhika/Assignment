@@ -1,23 +1,25 @@
-const express = require("express");
+const express = require('express');
 const { check } = require('express-validator');
-const router = express.Router()
-const cors = require("cors")
 
-const User = require("../models/user");
 const userController = require('../controllers/users-controller');
 
-router.use(cors())
+const router = express.Router();
 
-router.post('/user', async(req, res) => {
-    user = new User({
-        name: req.body.name,
-        designation: req.body.designation,
-        email: req.body.email,
-        phone: req.body.phone,
-        username: req.body.username,
-        password: req.body.password,
-        isAdmin: req.body.isAdmin
-    })
-});
+router.post(
+  '/create-user',
+  [
+    check('firstName').not().isEmpty(),
+    check('lastName').not().isEmpty(),
+    check('username').not().isEmpty(),
+    check('password').not().isEmpty().isLength({ min: 8 }),
+    check('dateOfBirth').not().isEmpty(),
+    check('email').not().isEmpty().normalizeEmail().isEmail(),
+    check('country').not().isEmpty(),
+    check('state').not().isEmpty(),
+    check('phoneNumber').not().isEmpty(),
+    check('mobileNumber').not().isEmpty(),
+  ],
+  userController.createUser
+);
 
 module.exports = router;
