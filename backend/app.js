@@ -2,7 +2,11 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const HttpError = require('./models/http-error');
 const mongoose = require("mongoose");
+const msg = require('./constants/message');
+const errorCode = require('./constants/common');
+
 require("dotenv").config();
 
 const app = express();
@@ -13,6 +17,22 @@ app.use(express.json());
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// router prefix
+app.use("/api/user", require("./routes/user_route"));
+
+app.use((req, res, next) => {
+  const error = new HttpError(msg.STORAGE_STATUS_MESSAGE.NotFound, errorCode.STATUS_CODE.NotFound);
+  throw error;
+});
+
+app.use((error, req, res, next) => {
+  if (res.headerSent) {
+    return next(error);
+  }
+  res.status(error.code || errorCode.STATUS_CODE.InternalServerError);
+  res.json({ message: error.message || msg.STORAGE_STATUS_MESSAGE.unknownError });
+});
 
 // database connection
 mongoose
@@ -25,10 +45,9 @@ mongoose
   .then(() => console.log("Database Connected !!"))
   .catch((err) => console.log(err));
 
-// router prefix
-app.use("/api/user", require("./routes/user_route"));
 
 // start the server
 app.listen(port, () =>
   console.log(`Server is running at http://localhost:${port}`)
 );
+
