@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const HttpError = require('./models/http-error');
 const mongoose = require("mongoose");
 const msg = require('./constants/message');
-const errorCode = require('./constants/common');
+const codes = require('./constants/common');
 
 require("dotenv").config();
 
@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 app.use("/api/user", require("./routes/user_route"));
 
 app.use((req, res, next) => {
-  const error = new HttpError(msg.STORAGE_STATUS_MESSAGE.NotFound, errorCode.STATUS_CODE.NotFound);
+  const error = new HttpError(msg.STATUS_MESSAGE.NotFound, errorCode.STATUS_CODE.NotFound);
   throw error;
 });
 
@@ -30,8 +30,8 @@ app.use((error, req, res, next) => {
   if (res.headerSent) {
     return next(error);
   }
-  res.status(error.code || errorCode.STATUS_CODE.InternalServerError);
-  res.json({ message: error.message || msg.STORAGE_STATUS_MESSAGE.unknownError });
+  res.status(error.code || codes.STATUS_CODE.InternalServerError);
+  res.json({ message: error.message || msg.STATUS_MESSAGE.unknownError });
 });
 
 // database connection
@@ -42,7 +42,7 @@ mongoose
     // useFindAndModify: true,
     // useCreateIndex: true,
   })
-  .then(() => console.log("Database Connected !!"))
+  .then(() => console.log("Database Connected Successfully!!"))
   .catch((err) => console.log(err));
 
 
