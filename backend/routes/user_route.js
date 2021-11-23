@@ -5,8 +5,7 @@ const userController = require('../controllers/users-controller');
 
 const router = express.Router();
 
-router.post(
-  '/create-user',
+router.post('/create-user',
   [
     check('firstName').not().isEmpty(),
     check('lastName').not().isEmpty(),
@@ -21,5 +20,7 @@ router.post(
   ],
   userController.createUser
 );
+
+router.get('/all-users', userController.getUsers);
 
 module.exports = router;
