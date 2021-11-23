@@ -97,8 +97,28 @@ const getUsers = async (req, res, next) => {
     const error = new HttpError(msg.STATUS_MESSAGE.GetUserFaild, codes.STATUS_CODE.InternalServerError);
     return next(error);
   }
-  res.status(200).json(users);
+  res.status(codes.STATUS_CODE.Success).json(users);
+}
+
+// delete a user
+const deleteUser = async (req, res, next) => {
+  const user_id = req.params.user_id;
+  
+  let user;
+  try {
+    user = await User.findById(user_id);
+  } catch (err) {
+    const error = new HttpError(msg.STATUS_MESSAGE.DeleteUserFaild, codes.STATUS_CODE.InternalServerError);
+    return next(error);
+  }
+  if (!user) {
+    const error = new HttpError(msg.STATUS_MESSAGE.UserNotFound, codes.STATUS_CODE.NotFound);
+    return next(error);
+  }
+  await User.remove(user_id);
+  res.status(codes.STATUS_CODE.Success).json({message: msg.STATUS_MESSAGE.Succ_delete});
 }
 
 exports.createUser = createUser;
 exports.getUsers = getUsers;
+exports.deleteUser = deleteUser;
