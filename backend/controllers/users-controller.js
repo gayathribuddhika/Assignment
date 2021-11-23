@@ -4,17 +4,15 @@ const codes = require("../constants/common");
 const msg = require("../constants/message");
 
 const User = require("../models/user");
-const { EPROTONOSUPPORT } = require("constants");
 
 // create a user
 const createUser = async (req, res, next) => {
   const errors = validationResult(req);
-  if (!errors.isEmpty()) return res.status(codes.STATUS_CODE.BadRequest).json(errors.array());
-  // if (!errors.isEmpty()) {
-  //   return next(
-  //     new HttpError( msg.STATUS_MESSAGE.InvalidInput, codes.STATUS_CODE.UnprocessableEntity)
-  //   );
-  // }
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError( msg.STATUS_MESSAGE.InvalidInput, codes.STATUS_CODE.UnprocessableEntity)
+    );
+  }
 
   const {
     firstName,
@@ -48,10 +46,7 @@ const createUser = async (req, res, next) => {
   try {
     hasEmail = await User.findOne({ email: email });
   } catch (err) {
-    const error = new HttpError(
-      'Something went wrong, please try again later.',
-      500
-    );
+    const error = new HttpError(msg.STATUS_MESSAGE.ServerError, codes.STATUS_CODE.InternalServerError);
     return next(error);
   }
 
