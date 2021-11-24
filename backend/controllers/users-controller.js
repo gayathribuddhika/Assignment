@@ -109,7 +109,7 @@ const deleteUser = async (req, res, next) => {
     const error = new HttpError(msg.STATUS_MESSAGE.UserNotFound, codes.STATUS_CODE.NotFound);
     return next(error);
   }
-  await User.remove(user);
+  await User.deleteOne(user);
   res.status(codes.STATUS_CODE.Success).json({message: msg.STATUS_MESSAGE.Succ_delete});
 }
 
