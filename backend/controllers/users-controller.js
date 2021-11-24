@@ -175,7 +175,7 @@ const updateUser = async (req, res, next) => {
   user.email = email;
   user.country = country;
   user.state = state;
-  user.contactNumber = phoneNumber;
+  user.contactNumber = contactNumber;
   
   try {
     await user.save();
