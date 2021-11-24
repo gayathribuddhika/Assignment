@@ -1,8 +1,9 @@
 const HttpError = require("../models/http-error");
 const { validationResult } = require("express-validator");
+const bcrypt = require("bcrypt");
+
 const codes = require("../constants/common");
 const msg = require("../constants/message");
-
 const User = require("../models/user");
 
 // create a user
@@ -10,7 +11,7 @@ const createUser = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
-      new HttpError( msg.STATUS_MESSAGE.InvalidInput, codes.STATUS_CODE.UnprocessableEntity)
+      new HttpError(msg.STATUS_MESSAGE.InvalidInput, codes.STATUS_CODE.UnprocessableEntity)
     );
   }
 
@@ -37,7 +38,7 @@ const createUser = async (req, res, next) => {
   }
 
   if (hasUsername) {
-    const error = new HttpError(msg.STATUS_MESSAGE.ExistUser, codes.STATUS_CODE.UnprocessableEntity);
+    const error = new HttpError(msg.STATUS_MESSAGE.ExistUsername, codes.STATUS_CODE.UnprocessableEntity);
     return next(error);
   }
 
@@ -51,17 +52,12 @@ const createUser = async (req, res, next) => {
   }
 
   if (hasEmail) {
-    const error = new HttpError(
-      'Could not create user. email is already exist',
-      422
-    );
+    const error = new HttpError(msg.STATUS_MESSAGE.ExistEmail, codes.STATUS_CODE.UnprocessableEntity);
     return next(error);
   }
 
-  // password encryption
-
   // creatting a new user
-  const createdUser = new User({
+  const newUser = new User({
     firstName,
     lastName,
     username,
@@ -74,13 +70,17 @@ const createUser = async (req, res, next) => {
     mobileNumber,
   });
 
+  // password encryption
+  const salt = await bcrypt.genSalt(12);
+  newUser.password = await bcrypt.hash(newUser.password, salt);
+
   try {
-    await createdUser.save();
+    await newUser.save();
   } catch (err) {
     const error = new HttpError(msg.STATUS_MESSAGE.CreateUserfaild, codes.STATUS_CODE.InternalServerError);
     return next(error);
   }
-  res.status(codes.STATUS_CODE.Success).json({ user: createdUser });
+  res.status(codes.STATUS_CODE.Success).json({ user: newUser, msg: msg.STATUS_MESSAGE.Succ_add});
 };
 
 // fetch all registered users
@@ -113,6 +113,83 @@ const deleteUser = async (req, res, next) => {
   res.status(codes.STATUS_CODE.Success).json({message: msg.STATUS_MESSAGE.Succ_delete});
 }
 
+// update a user
+const updateUser = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError(msg.STATUS_MESSAGE.InvalidInput, codes.STATUS_CODE.UnprocessableEntity)
+    );
+  }
+
+  const {
+    firstName,
+    lastName,
+    username,
+    password,
+    dateOfBirth,
+    email,
+    country,
+    state,
+    phoneNumber,
+    mobileNumber,
+  } = req.body;
+
+  const _id = req.params.id;
+
+  let allUsers;
+  try {
+    allUsers = await User.find();
+  } catch (error) {
+    const err = new HttpError(msg.STATUS_MESSAGE.GetUserFaild, codes.STATUS_CODE.InternalServerError);
+    return next(error);
+  }
+
+  let restUsers = allUsers.filter((user) => user.id !== _id);
+
+  //Checking username is already exist
+  let hasUsername = restUsers.find((user) => user.username === username);
+  if (hasUsername) {
+    const error = new HttpError(msg.STATUS_MESSAGE.UpdateUsernameFaild, codes.STATUS_CODE.InternalServerError);
+    return next(error);
+  }
+
+  //Checking email is already exist
+  let hasEmail = restUsers.find((user) => user.email === email);
+  if (hasEmail) {
+    const error = new HttpError(msg.STATUS_MESSAGE.UpdateEmailFaild, codes.STATUS_CODE.InternalServerError);
+    return next(error);
+  }
+
+  let user;
+  try {
+    user = await User.findById({_id: req.params.id});
+  } catch (err) {
+    const error = new HttpError(msg.STATUS_MESSAGE.UpdateFaild, codes.STATUS_CODE.InternalServerError);
+    return next(error);
+  }
+
+  user.firstName = firstName;
+  user.lastName = lastName;
+  user.username = username;
+  user.password = password;
+  user.dateOfBirth = dateOfBirth;
+  user.email = email;
+  user.country = country;
+  user.state = state;
+  user.phoneNumber = phoneNumber;
+  user.mobileNumber = mobileNumber;
+
+  try {
+    await user.save();
+  } catch (err) {
+    const error = new HttpError(msg.STATUS_MESSAGE.UpdateFaild, codes.STATUS_CODE.InternalServerError);
+    return next(error);
+  }
+  res.status(codes.STATUS_CODE.Success).json({ user, msg:msg.STATUS_MESSAGE.Scc_update});
+}
+
 exports.createUser = createUser;
 exports.getUsers = getUsers;
 exports.deleteUser = deleteUser;
+exports.updateUser = updateUser;
