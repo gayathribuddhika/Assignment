@@ -1,53 +1,47 @@
 import React, { useState } from "react";
 import { Button, Form, Card, Row, Col } from "react-bootstrap";
+import axios from 'axios';
 
-const NewUser = () => {
-  const [user, setUser] = useState({});
-  // const [formError, setformError] = useState({});
+function AddUser (){
+  
+  const [firstName, setfirstName] = useState("");
+  const [lastName, setlastName] = useState("");
+  const [username, setusername] = useState("");
+  const [password, setpassword] = useState("");
+  const [dateOfBirth, setdateOfBirth] = useState("");
+  // const [confirm_password, setconfirm_password] = useState("");
+  const [email, setemail] = useState("");
+  const [country, setcountry] = useState("");
+  const [state, setstate] = useState("");
+  const [phoneNumber, setphoneNumber] = useState("");
+  const [mobileNumber, setmobileNumber] = useState("");
 
-  function handleChange(e) {
-    const { name, value } = e.target;
-
-    switch (name) {
-      case "firstName":
-        setUser({ ...user, firstName: value });
-        break;
-      case "lastName":
-        setUser({ ...user, lastName: value });
-        break;
-      case "username":
-        setUser({ ...user, username: value });
-        break;
-      case "password":
-        setUser({ ...user, password: value });
-        break;
-      case "confirm_password":
-        setUser({ ...user, confirm_password: value });
-        break;
-      case "password":
-        setUser({ ...user, password: value });
-        break;
-      case "email":
-        setUser({ ...user, email: value });
-        break;
-      case "country":
-        setUser({ ...user, country: value });
-        break;
-      case "state":
-        setUser({ ...user, state: value });
-        break;
-      case "phone":
-        setUser({ ...user, phone: value });
-        break;
-      case "mobile":
-        setUser({ ...user, mobile: value });
-        break;
-      default:
-        break;
+  
+  function submitForm(e) {
+    e.preventDefault();
+    
+    const newUser = {
+      firstName,
+      lastName,
+      username,
+      password,
+      dateOfBirth,
+      // confirm_password,
+      email,
+      country,
+      state,
+      phoneNumber,
+      mobileNumber
     }
-  }
+    console.log(newUser);
 
-  function submit() {}
+    axios.post("http://localhost:5000/api/users/create-user", newUser)
+    .then(() => {
+      alert("User Registered Successfully");
+    }).catch((err) => {
+      console.log(err);
+    })
+  }
 
   return (
     <div className="border d-flex align-items-center justify-content-center">
@@ -58,7 +52,7 @@ const NewUser = () => {
             <h3 style={{ color: "blue" }}>User Registration Form</h3>
           </Card.Title>
           <br />
-          <Form className="g-2">
+          <Form className="g-2" onSubmit={submitForm}>
             <Row>
               <Col md>
                 <Form.Group className="mb-3" controlId="formBasicFirstName">
@@ -66,7 +60,7 @@ const NewUser = () => {
                   <Form.Control
                     type="firstname"
                     placeholder="Enter first name"
-                    onChange={handleChange}
+                    onChange={(e) => {setfirstName(e.target.value)}}
                   />
                 </Form.Group>
               </Col>
@@ -76,7 +70,7 @@ const NewUser = () => {
                   <Form.Control
                     type="lastname"
                     placeholder="Enter Last name"
-                    onChange={handleChange}
+                    onChange={(e) => {setlastName(e.target.value)}}
                   />
                 </Form.Group>
               </Col>
@@ -86,7 +80,7 @@ const NewUser = () => {
               <Form.Control
                 type="lastname"
                 placeholder="Enter a username"
-                onChange={handleChange}
+                onChange={(e) => {setusername(e.target.value)}}
               />
             </Form.Group>
             <Row>
@@ -96,7 +90,7 @@ const NewUser = () => {
                   <Form.Control
                     type="password"
                     placeholder="Password"
-                    onChange={handleChange}
+                    onChange={(e) => {setpassword(e.target.value)}}
                   />
                 </Form.Group>
               </Col>
@@ -109,17 +103,25 @@ const NewUser = () => {
                   <Form.Control
                     type="password"
                     placeholder="Retype the Password"
-                    onChange={handleChange}
+                    // onChange={(e) => {setconfirm_password(e.target.value)}}
                   />
                 </Form.Group>
               </Col>
             </Row>
+            <Form.Group className="mb-3" controlId="formBasicdateOfBirth">
+              <Form.Label>Date of Birth</Form.Label>
+              <Form.Control
+                type="birthday"
+                placeholder="Enter your birthday"
+                onChange={(e) => {setdateOfBirth(e.target.value)}}
+              />
+            </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
               <Form.Control
                 type="email"
                 placeholder="Enter email"
-                onChange={handleChange}
+                onChange={(e) => {setemail(e.target.value)}}
               />
             </Form.Group>
             <Row>
@@ -129,7 +131,7 @@ const NewUser = () => {
                   <Form.Control
                     type="country"
                     placeholder="Enter your country"
-                    onChange={handleChange}
+                    onChange={(e) => {setcountry(e.target.value)}}
                   />
                 </Form.Group>
               </Col>
@@ -139,7 +141,7 @@ const NewUser = () => {
                   <Form.Control
                     type="state"
                     placeholder="Enter state"
-                    onChange={handleChange}
+                    onChange={(e) => {setstate(e.target.value)}}
                   />
                 </Form.Group>
               </Col>
@@ -151,7 +153,7 @@ const NewUser = () => {
                   <Form.Control
                     type="phone_number"
                     placeholder="Enter phone number"
-                    onChange={handleChange}
+                    onChange={(e) => {setphoneNumber(e.target.value)}}
                   />
                 </Form.Group>
               </Col>
@@ -161,12 +163,12 @@ const NewUser = () => {
                   <Form.Control
                     type="mobile"
                     placeholder="Enter mobile number"
-                    onChange={handleChange}
+                    onChange={(e) => {setmobileNumber(e.target.value)}}
                   />
                 </Form.Group>
               </Col>
             </Row>
-            <Button variant="primary" type="submit" onClick={submit}>
+            <Button variant="primary" type="submit">
               Submit
             </Button>
           </Form>
@@ -176,4 +178,4 @@ const NewUser = () => {
   );
 };
 
-export default NewUser;
+export default AddUser;
