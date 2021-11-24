@@ -24,8 +24,8 @@ const createUser = async (req, res, next) => {
     email,
     country,
     state,
-    phoneNumber,
-    mobileNumber,
+    contactNumber
+    
   } = req.body;
 
   // Checking username is already exist
@@ -66,8 +66,7 @@ const createUser = async (req, res, next) => {
     email,
     country,
     state,
-    phoneNumber,
-    mobileNumber,
+    contactNumber
   });
 
   // password encryption
@@ -131,8 +130,7 @@ const updateUser = async (req, res, next) => {
     email,
     country,
     state,
-    phoneNumber,
-    mobileNumber,
+    contactNumber
   } = req.body;
 
   const _id = req.params.id;
@@ -177,9 +175,8 @@ const updateUser = async (req, res, next) => {
   user.email = email;
   user.country = country;
   user.state = state;
-  user.phoneNumber = phoneNumber;
-  user.mobileNumber = mobileNumber;
-
+  user.contactNumber = phoneNumber;
+  
   try {
     await user.save();
   } catch (err) {
