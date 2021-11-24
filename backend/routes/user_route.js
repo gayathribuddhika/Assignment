@@ -1,9 +1,12 @@
 const express = require('express');
+const cors = require("cors");
 const { check } = require('express-validator');
 
 const userController = require('../controllers/users-controller');
 
 const router = express.Router();
+
+router.use(cors());
 
 router.post('/create-user',
   [

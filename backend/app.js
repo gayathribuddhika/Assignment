@@ -1,5 +1,6 @@
 // import
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const HttpError = require('./models/http-error');
 const mongoose = require("mongoose");
@@ -12,6 +13,7 @@ const app = express();
 
 // middlewares
 app.use(bodyParser.json());
+app.use(cors());
 
 // router prefix
 app.use('/api/users', userRoutes);

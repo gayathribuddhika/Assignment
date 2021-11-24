@@ -97,11 +97,10 @@ const getUsers = async (req, res, next) => {
 
 // delete a user
 const deleteUser = async (req, res, next) => {
-  const user_id = req.params.user_id;
-  
   let user;
   try {
-    user = await User.findById(user_id);
+    user = await User.findById({_id: req.params.id});
+    // console.log(user);
   } catch (err) {
     const error = new HttpError(msg.STATUS_MESSAGE.DeleteUserFaild, codes.STATUS_CODE.InternalServerError);
     return next(error);
@@ -110,7 +109,7 @@ const deleteUser = async (req, res, next) => {
     const error = new HttpError(msg.STATUS_MESSAGE.UserNotFound, codes.STATUS_CODE.NotFound);
     return next(error);
   }
-  await User.remove(user_id);
+  await User.remove(user);
   res.status(codes.STATUS_CODE.Success).json({message: msg.STATUS_MESSAGE.Succ_delete});
 }
 
