@@ -1,16 +1,18 @@
 // import './App.css';
-import {BrowserRouter as Router } from 'react-router-dom';
+import {BrowserRouter as Router, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Header from './components/header';
-import NewUser from './user/pages/users';
+import NewUser from './components/users';
 
 const App = () => {
   return (
     <Router>
+      <div>
       <Header />
-      {/* <Route path="/" exact compinent={NewUser}></Route> */}
-      <NewUser />
+      <Route path="/register" exact component={NewUser}></Route>
+      {/* <NewUser /> */}
+      </div>
     </Router>
   );
 };
