@@ -1,16 +1,21 @@
-import React, { useState} from "react";
+import React, {useState} from "react";
 import { Button, Form, Card } from "react-bootstrap";
 
 const NewUser = () => {
-    const [user, setUser] = useState({});
-    const [formError, setformError] = useState({});
+  const [user, setUser] = useState({});
+  // const [formError, setformError] = useState({});
+
+  function submit() {
+    
+  }
 
   return (
-    <div>
+    <div className="border d-flex align-items-center justify-content-center">
       <hr />
-      <Card border="primary" style={{ width: "50rem" }}>
+      <Card border="primary" style={{ width: "40rem", marginTop: "80px"}}>
         <Card.Body>
-          <h2>User Registration Form</h2>
+        <Card.Title style={{textAlign:"center"}}><h3>User Registration Form</h3></Card.Title>
+          
           <Form>
             <Form.Group className="mb-3" controlId="formBasicFirstName">
               <Form.Label>First Name</Form.Label>
@@ -53,7 +58,7 @@ const NewUser = () => {
               <Form.Control type="mobile" placeholder="Enter mobile number" />
             </Form.Group>
             
-            <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit" onClick={submit}>
               Submit
             </Button>
           </Form>
