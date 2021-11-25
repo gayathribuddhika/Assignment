@@ -57,9 +57,7 @@ const createUser = async (req, res, next) => {
     const error = new HttpError(msg.STATUS_MESSAGE.ExistEmail, codes.STATUS_CODE.UnprocessableEntity);
     return next(error);
   }
-
-  
-
+ 
   // creatting a new user
   const newUser = new User({
     firstName,
