@@ -8,7 +8,7 @@ const AddUser = () => {
     lastName: "",
     username: "",
     password: "",
-    // confirm_password,
+    confirm_password: "",
     dateOfBirth: "",
     email: "",
     country: "",
@@ -18,6 +18,10 @@ const AddUser = () => {
   };
 
   const [formValues, setformValues] = useState(initialValues);
+  // const [formErrors, setformErrors] = useState({});
+  // const [isSubmit, setisSubmit] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [succMessage, setsuccMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,33 +30,57 @@ const AddUser = () => {
 
   function submitForm(e) {
     e.preventDefault();
+    // setformErrors(validate(formValues));
+    // setisSubmit(true);
 
     const newUser = {
       firstName: formValues.firstname,
       lastName: formValues.lastname,
       username: formValues.username,
       password: formValues.password,
+      confirm_password: formValues.confirm_password,
       dateOfBirth: formValues.dateOfBirth,
       email: formValues.email,
       country: formValues.country,
       state: formValues.state,
       phoneNumber: formValues.phoneNumber,
-      mobileNumber: formValues.mobileNumber
+      mobileNumber: formValues.mobileNumber,
     };
-
     console.log(newUser);
 
     axios
       .post("http://localhost:5000/api/users/create-user", newUser)
-      .then((res) => {
-        console.log(res);
-        alert("User Registered Successfully");
-        e.target.reset();
+      .then((response) => {
+        setsuccMessage(response.data.message);
+        setformValues(initialValues);
       })
       .catch((err) => {
-        console.log(err);
+        if (err.response) {
+          setErrorMessage(err.response.data.message);
+        }
       });
   }
+
+  // useEffect(() => {
+  //   if(Object.keys(formErrors).length === 0 && isSubmit) {
+  //     console.log(formValues);
+  //   }
+  // }, [formErrors])
+
+  // const validate = (values) => {
+  //   const errors = {};
+  //   const regex = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
+     
+  //   if(values.password < 8 && values.confirm_password < 8) {
+  //     errors.password = "Password must be at least 8 characters long!";
+  //   }
+
+  //   if(!regex.test(values.email)) {
+  //      errors.email = "You should provide a valid email address!"
+  //   }
+
+  //   return errors;
+  // };
 
   return (
     <div className="border d-flex align-items-center justify-content-center">
@@ -64,6 +92,19 @@ const AddUser = () => {
           </Card.Title>
           <br />
           <Form className="g-2" onSubmit={submitForm}>
+            {errorMessage && (
+              <div className="error" style={{ color: "red" }}>
+                {" "}
+                {errorMessage}{" "}
+              </div>
+            )}
+            {succMessage && (
+              <div className="succ" style={{ color: "red" }}>
+                {" "}
+                {succMessage}{" "}
+              </div>
+            )}
+            <br />
             <Row>
               <Col md>
                 <Form.Group className="mb-3" controlId="formBasicFirstName">
@@ -116,6 +157,7 @@ const AddUser = () => {
                     required
                   />
                 </Form.Group>
+                {/* <p>{formErrors.password}</p> */}
               </Col>
               <Col md>
                 <Form.Group
@@ -131,6 +173,7 @@ const AddUser = () => {
                     // onChange={(e) => {setconfirm_password(e.target.value)}}
                   />
                 </Form.Group>
+                {/* <p>{formErrors.password}</p> */}
               </Col>
             </Row>
             <Form.Group className="mb-3" controlId="formBasicdateOfBirth">
@@ -155,6 +198,7 @@ const AddUser = () => {
                 required
               />
             </Form.Group>
+            {/* <p>{formErrors.email}</p> */}
             <Row>
               <Col md>
                 <Form.Group className="mb-3" controlId="formBasicCountry">
@@ -168,6 +212,7 @@ const AddUser = () => {
                     required
                   />
                 </Form.Group>
+                
               </Col>
               <Col md>
                 <Form.Group className="mb-3" controlId="formBasicSate">
@@ -193,7 +238,6 @@ const AddUser = () => {
                     placeholder="Enter phone number"
                     value={formValues.phoneNumber}
                     onChange={handleChange}
-                    required
                   />
                 </Form.Group>
               </Col>
@@ -219,6 +263,6 @@ const AddUser = () => {
       </Card>
     </div>
   );
-}
+};
 
 export default AddUser;

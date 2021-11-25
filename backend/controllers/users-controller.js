@@ -84,7 +84,7 @@ const createUser = async (req, res, next) => {
     const error = new HttpError(msg.STATUS_MESSAGE.CreateUserfaild, codes.STATUS_CODE.InternalServerError);
     return next(error);
   }
-  res.status(codes.STATUS_CODE.Success).json({ user: newUser, msg: msg.STATUS_MESSAGE.Succ_add});
+  res.status(codes.STATUS_CODE.Success).json({ user: newUser, message: msg.STATUS_MESSAGE.Succ_add});
 };
 
 // fetch all registered users
