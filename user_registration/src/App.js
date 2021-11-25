@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Header from './components/header';
 // import AddUser from './components/users';
-import AddUser from './components/sample';
+import AddUser from './components/users';
 
 const App = () => {
   return (

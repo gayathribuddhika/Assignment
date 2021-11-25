@@ -24,7 +24,9 @@ const createUser = async (req, res, next) => {
     email,
     country,
     state,
-    contactNumber
+    phoneNumber,
+    mobileNumber
+    // contactNumber
     
   } = req.body;
 
@@ -56,6 +58,8 @@ const createUser = async (req, res, next) => {
     return next(error);
   }
 
+  
+
   // creatting a new user
   const newUser = new User({
     firstName,
@@ -66,7 +70,10 @@ const createUser = async (req, res, next) => {
     email,
     country,
     state,
-    contactNumber
+    contactNumber:{
+      phoneNumber,
+      mobileNumber
+    }
   });
 
   // password encryption
@@ -130,7 +137,7 @@ const updateUser = async (req, res, next) => {
     email,
     country,
     state,
-    contactNumber
+    
   } = req.body;
 
   const _id = req.params.id;
@@ -175,7 +182,8 @@ const updateUser = async (req, res, next) => {
   user.email = email;
   user.country = country;
   user.state = state;
-  user.contactNumber = contactNumber;
+  user.phoneNumber = phoneNumber;
+  user.mobileNumber = mobileNumber;
   
   try {
     await user.save();

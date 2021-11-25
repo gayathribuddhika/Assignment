@@ -1,56 +1,57 @@
 import React, { useState } from "react";
 import { Button, Form, Card, Row, Col } from "react-bootstrap";
-import axios from 'axios';
+import axios from "axios";
 
 const AddUser = () => {
-  
-  const [firstName, setfirstName] = useState("");
-  const [lastName, setlastName] = useState("");
-  const [username, setusername] = useState("");
-  const [password, setpassword] = useState("");
-  // const [confirm_password, setconfirm_password] = useState("")
-  const [dateOfBirth, setdateOfBirth] = useState("");
-  const [email, setemail] = useState("");
-  const [country, setcountry] = useState("");
-  const [state, setstate] = useState("");
-  const [phoneNumber, setphoneNumber] = useState("");
-  const [mobileNumber, setmobileNumber] = useState("");
+  const initialValues = {
+    firstName: "",
+    lastName: "",
+    username: "",
+    password: "",
+    // confirm_password,
+    dateOfBirth: "",
+    email: "",
+    country: "",
+    state: "",
+    phoneNumber: "",
+    mobileNumber: "",
+  };
 
-  
-  // function passwordHandler(e) {
-  //   if(password.length < 8) {
-  //     setpasswordErr(true)
-  //   } else if (password !== confirm_password) {
-  //     setpasswordErr(true)
-  //   }
-  // }
+  const [formValues, setformValues] = useState(initialValues);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setformValues({ ...formValues, [name]: value });
+  };
 
   function submitForm(e) {
     e.preventDefault();
 
     const newUser = {
-      firstName,
-      lastName,
-      username,
-      password,
-      // confirm_password,
-      dateOfBirth,
-      email,
-      country,
-      state,
-      contactNumber: {phoneNumber, mobileNumber}
-    }
-   
+      firstName: formValues.firstname,
+      lastName: formValues.lastname,
+      username: formValues.username,
+      password: formValues.password,
+      dateOfBirth: formValues.dateOfBirth,
+      email: formValues.email,
+      country: formValues.country,
+      state: formValues.state,
+      phoneNumber: formValues.phoneNumber,
+      mobileNumber: formValues.mobileNumber
+    };
+
     console.log(newUser);
 
-    axios.post("http://localhost:5000/api/users/create-user", newUser)
-    .then(() => {
-      alert("User Registered Successfully");
-      e.target.reset();
-      // console.log(res.data.msg);
-    }).catch((err) => {
-      console.log(err);
-    })
+    axios
+      .post("http://localhost:5000/api/users/create-user", newUser)
+      .then((res) => {
+        console.log(res);
+        alert("User Registered Successfully");
+        e.target.reset();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   return (
@@ -69,8 +70,10 @@ const AddUser = () => {
                   <Form.Label>First Name</Form.Label>
                   <Form.Control
                     type="firstname"
+                    name="firstname"
                     placeholder="Enter first name"
-                    onChange={(e) => {setfirstName(e.target.value)}}
+                    value={formValues.firstname}
+                    onChange={handleChange}
                     required
                   />
                 </Form.Group>
@@ -80,8 +83,10 @@ const AddUser = () => {
                   <Form.Label>Last Name</Form.Label>
                   <Form.Control
                     type="lastname"
+                    name="lastname"
                     placeholder="Enter Last name"
-                    onChange={(e) => {setlastName(e.target.value)}}
+                    value={formValues.lastname}
+                    onChange={handleChange}
                     required
                   />
                 </Form.Group>
@@ -90,9 +95,11 @@ const AddUser = () => {
             <Form.Group className="mb-3" controlId="formBasicUsername">
               <Form.Label>Username</Form.Label>
               <Form.Control
-                type="lastname"
+                type="username"
+                name="username"
                 placeholder="Enter a username"
-                onChange={(e) => {setusername(e.target.value)}}
+                value={formValues.username}
+                onChange={handleChange}
                 required
               />
             </Form.Group>
@@ -102,8 +109,10 @@ const AddUser = () => {
                   <Form.Label>Password</Form.Label>
                   <Form.Control
                     type="password"
+                    name="password"
                     placeholder="Password"
-                    onChange={(e) => {setpassword(e.target.value)}}
+                    value={formValues.password}
+                    onChange={handleChange}
                     required
                   />
                 </Form.Group>
@@ -116,6 +125,7 @@ const AddUser = () => {
                   <Form.Label>Confirm Password</Form.Label>
                   <Form.Control
                     type="password"
+                    name="password"
                     placeholder="Retype the Password"
                     required
                     // onChange={(e) => {setconfirm_password(e.target.value)}}
@@ -127,8 +137,10 @@ const AddUser = () => {
               <Form.Label>Date of Birth</Form.Label>
               <Form.Control
                 type="birthday"
+                name="dateOfBirth"
                 placeholder="Enter your birthday"
-                onChange={(e) => {setdateOfBirth(e.target.value)}}
+                value={formValues.dateOfBirth}
+                onChange={handleChange}
                 required
               />
             </Form.Group>
@@ -136,8 +148,10 @@ const AddUser = () => {
               <Form.Label>Email address</Form.Label>
               <Form.Control
                 type="email"
+                name="email"
                 placeholder="Enter email"
-                onChange={(e) => {setemail(e.target.value)}}
+                value={formValues.email}
+                onChange={handleChange}
                 required
               />
             </Form.Group>
@@ -147,8 +161,10 @@ const AddUser = () => {
                   <Form.Label>Country</Form.Label>
                   <Form.Control
                     type="country"
+                    name="country"
                     placeholder="Enter your country"
-                    onChange={(e) => {setcountry(e.target.value)}}
+                    value={formValues.country}
+                    onChange={handleChange}
                     required
                   />
                 </Form.Group>
@@ -158,8 +174,10 @@ const AddUser = () => {
                   <Form.Label>State</Form.Label>
                   <Form.Control
                     type="state"
+                    name="state"
                     placeholder="Enter state"
-                    onChange={(e) => {setstate(e.target.value)}}
+                    value={formValues.state}
+                    onChange={handleChange}
                     required
                   />
                 </Form.Group>
@@ -170,9 +188,11 @@ const AddUser = () => {
                 <Form.Group className="mb-3" controlId="formBasicPhone">
                   <Form.Label>Phone Number</Form.Label>
                   <Form.Control
-                    type="phone_number"
+                    type="phoneNumber"
+                    name="phoneNumber"
                     placeholder="Enter phone number"
-                    onChange={(e) => {setphoneNumber(e.target.value)}}
+                    value={formValues.phoneNumber}
+                    onChange={handleChange}
                     required
                   />
                 </Form.Group>
@@ -182,8 +202,10 @@ const AddUser = () => {
                   <Form.Label>Mobile Number</Form.Label>
                   <Form.Control
                     type="mobile"
+                    name="mobileNumber"
                     placeholder="Enter mobile number"
-                    onChange={(e) => {setmobileNumber(e.target.value)}}
+                    value={formValues.mobileNumber}
+                    onChange={handleChange}
                     required
                   />
                 </Form.Group>
@@ -197,6 +219,6 @@ const AddUser = () => {
       </Card>
     </div>
   );
-};
+}
 
 export default AddUser;

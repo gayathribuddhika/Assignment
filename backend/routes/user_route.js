@@ -18,9 +18,9 @@ router.post('/create-user',
     check('email').not().isEmpty().normalizeEmail().isEmail(),
     check('country').not().isEmpty(),
     check('state').not().isEmpty(),
-    check('contactNumber').not().isEmpty(),
-    // check('phoneNumber').not().isEmpty(),
-    // check('mobileNumber').not().isEmpty(),
+    // check('contactNumber').not().isEmpty(),
+    check('phoneNumber').not().isEmpty(),
+    check('mobileNumber').not().isEmpty(),
   ],
   userController.createUser
 );

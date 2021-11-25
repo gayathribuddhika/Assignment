@@ -3,27 +3,48 @@ import { Button, Form, Card, Row, Col } from "react-bootstrap";
 // import axios from 'axios';
 
 function AddUser() {
-  const [formValues, setformValues] = useState({
+  const inititalValues = {
     username: "",
     password: "",
     // email: "",
-    contactNumber: {
-      phoneNumber: "",
-      mobileNumber: "",
-    },
-  });
-// console.log(formValues);
+    phoneNumber: "",
+    mobileNumber: "",
+  };
+  const [formValues, setformValues] = useState(inititalValues);
+  // console.log(formValues);
 
- const handleChange = (e) => {
-    const { data, value } = e.target;
-    console.log(value);
-    setformValues({ ...formValues, [data]: value });
+  const handleChange = (e) => {
+    //  console.log(e.target)
+    const { name, value } = e.target;
+    setformValues({ ...formValues, [name]: value });
     console.log(formValues);
   };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    
+
+    const newUser = {
+        username: formValues.username,
+        password: formValues.password,
+        // email: formValues.email,
+        phoneNumber: formValues.phoneNumber,
+        mobileNumber: formValues.mobileNumber
+    }
+
+    console.log(newUser);
+
+    // const data = {
+    //   username: "",
+    //   password: "",
+    //   email: "",
+    //   contactNumber: {
+    //     phoneNumber: "",
+    //     mobileNumber: "",
+    //   },
+    // };
+
+    // data.username = formvalues.username;
+    // data.contactNumber.phoneNumber = formvalues.phoneNumber;
   };
 
   return (
@@ -35,6 +56,7 @@ function AddUser() {
             <h3 style={{ color: "blue" }}>User Registration Form</h3>
           </Card.Title>
           <br />
+          
           <Form className="g-2" onSubmit={handleFormSubmit}>
             <Form.Group className="mb-3" controlId="formBasicUsername">
               <Form.Label>Username</Form.Label>
@@ -82,9 +104,9 @@ function AddUser() {
                   <Form.Label>Phone Number</Form.Label>
                   <Form.Control
                     type="phoneNumber"
-                    name="contactNumber[phoneNumber]"
+                    name="phoneNumber"
                     placeholder="Enter phone number"
-                    value={formValues.contactNumber.phoneNumber}
+                    value={formValues.phoneNumber}
                     onChange={handleChange}
                     required
                   />
@@ -97,7 +119,7 @@ function AddUser() {
                     type="mobileNumber"
                     name="mobileNumber"
                     placeholder="Enter mobile number"
-                    value={formValues.contactNumber.mobileNumber}
+                    value={formValues.mobileNumber}
                     onChange={handleChange}
                     required
                   />
