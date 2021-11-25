@@ -18,10 +18,8 @@ const AddUser = () => {
   };
 
   const [formValues, setformValues] = useState(initialValues);
-  // const [formErrors, setformErrors] = useState({});
-  // const [isSubmit, setisSubmit] = useState(false);
+  const [formErrors, setformErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
-  const [succMessage, setsuccMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,57 +28,59 @@ const AddUser = () => {
 
   function submitForm(e) {
     e.preventDefault();
-    // setformErrors(validate(formValues));
-    // setisSubmit(true);
+    const errors = {};
+    const regex = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
 
-    const newUser = {
-      firstName: formValues.firstname,
-      lastName: formValues.lastname,
-      username: formValues.username,
-      password: formValues.password,
-      confirm_password: formValues.confirm_password,
-      dateOfBirth: formValues.dateOfBirth,
-      email: formValues.email,
-      country: formValues.country,
-      state: formValues.state,
-      phoneNumber: formValues.phoneNumber,
-      mobileNumber: formValues.mobileNumber,
-    };
-    console.log(newUser);
+    if (
+      formValues.password.length < 8 &&
+      formValues.confirm_password.length < 8
+    ) {
+      errors.password = "Password must be at least 8 characters long!";
+    } else if (formValues.password !== formValues.confirm_password) {
+      errors.password = "Password and confirm passsword mismatch!";
+    }
 
-    axios
-      .post("http://localhost:5000/api/users/create-user", newUser)
-      .then((response) => {
-        setsuccMessage(response.data.message);
-        setformValues(initialValues);
-      })
-      .catch((err) => {
-        if (err.response) {
-          setErrorMessage(err.response.data.message);
-        }
-      });
+    if (!regex.test(formValues.email)) {
+      errors.email = "You should provide a valid email address!";
+    }
+
+    if (
+      formValues.phoneNumber.length !== 10 &&
+      formValues.mobileNumber.length !== 10
+    ) {
+      errors.phoneNumber =
+        "Phone and Mobile Numbers should have 10 characters!";
+    }
+    setformErrors(errors);
+
+    if (Object.keys(errors).length === 0) {
+      const newUser = {
+        firstName: formValues.firstName,
+        lastName: formValues.lastName,
+        username: formValues.username,
+        password: formValues.password,
+        dateOfBirth: formValues.dateOfBirth,
+        email: formValues.email,
+        country: formValues.country,
+        state: formValues.state,
+        phoneNumber: formValues.phoneNumber,
+        mobileNumber: formValues.mobileNumber,
+      };
+      console.log(newUser);
+
+      axios
+        .post("http://localhost:5000/api/users/create-user", newUser)
+        .then((response) => {
+          alert(response.data.message);
+          setformValues(initialValues);
+        })
+        .catch((err) => {
+          if (err.response) {
+            setErrorMessage(err.response.data.message);
+          }
+        });
+    }
   }
-
-  // useEffect(() => {
-  //   if(Object.keys(formErrors).length === 0 && isSubmit) {
-  //     console.log(formValues);
-  //   }
-  // }, [formErrors])
-
-  // const validate = (values) => {
-  //   const errors = {};
-  //   const regex = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
-     
-  //   if(values.password < 8 && values.confirm_password < 8) {
-  //     errors.password = "Password must be at least 8 characters long!";
-  //   }
-
-  //   if(!regex.test(values.email)) {
-  //      errors.email = "You should provide a valid email address!"
-  //   }
-
-  //   return errors;
-  // };
 
   return (
     <div className="border d-flex align-items-center justify-content-center">
@@ -98,12 +98,6 @@ const AddUser = () => {
                 {errorMessage}{" "}
               </div>
             )}
-            {succMessage && (
-              <div className="succ" style={{ color: "red" }}>
-                {" "}
-                {succMessage}{" "}
-              </div>
-            )}
             <br />
             <Row>
               <Col md>
@@ -111,9 +105,9 @@ const AddUser = () => {
                   <Form.Label>First Name</Form.Label>
                   <Form.Control
                     type="firstname"
-                    name="firstname"
+                    name="firstName"
                     placeholder="Enter first name"
-                    value={formValues.firstname}
+                    value={formValues.firstName}
                     onChange={handleChange}
                     required
                   />
@@ -124,9 +118,9 @@ const AddUser = () => {
                   <Form.Label>Last Name</Form.Label>
                   <Form.Control
                     type="lastname"
-                    name="lastname"
+                    name="lastName"
                     placeholder="Enter Last name"
-                    value={formValues.lastname}
+                    value={formValues.lastName}
                     onChange={handleChange}
                     required
                   />
@@ -157,7 +151,6 @@ const AddUser = () => {
                     required
                   />
                 </Form.Group>
-                {/* <p>{formErrors.password}</p> */}
               </Col>
               <Col md>
                 <Form.Group
@@ -167,19 +160,20 @@ const AddUser = () => {
                   <Form.Label>Confirm Password</Form.Label>
                   <Form.Control
                     type="password"
-                    name="password"
+                    name="confirm_password"
                     placeholder="Retype the Password"
                     required
-                    // onChange={(e) => {setconfirm_password(e.target.value)}}
+                    value={formValues.confirm_password}
+                    onChange={handleChange}
                   />
                 </Form.Group>
-                {/* <p>{formErrors.password}</p> */}
               </Col>
+              <p style={{ color: "red" }}>{formErrors.password}</p>
             </Row>
             <Form.Group className="mb-3" controlId="formBasicdateOfBirth">
               <Form.Label>Date of Birth</Form.Label>
               <Form.Control
-                type="birthday"
+                type="date"
                 name="dateOfBirth"
                 placeholder="Enter your birthday"
                 value={formValues.dateOfBirth}
@@ -198,7 +192,7 @@ const AddUser = () => {
                 required
               />
             </Form.Group>
-            {/* <p>{formErrors.email}</p> */}
+            <p style={{ color: "red" }}>{formErrors.email}</p>
             <Row>
               <Col md>
                 <Form.Group className="mb-3" controlId="formBasicCountry">
@@ -212,7 +206,6 @@ const AddUser = () => {
                     required
                   />
                 </Form.Group>
-                
               </Col>
               <Col md>
                 <Form.Group className="mb-3" controlId="formBasicSate">
@@ -254,6 +247,7 @@ const AddUser = () => {
                   />
                 </Form.Group>
               </Col>
+              <p style={{ color: "red" }}>{formErrors.phoneNumber}</p>
             </Row>
             <Button variant="primary" type="submit">
               Submit

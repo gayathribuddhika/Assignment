@@ -38,7 +38,7 @@ const createUser = async (req, res, next) => {
     const error = new HttpError(msg.STATUS_MESSAGE.ServerError, codes.STATUS_CODE.InternalServerError);
     return next(error);
   }
-
+  
   if (hasUsername) {
     const error = new HttpError(msg.STATUS_MESSAGE.ExistUsername, codes.STATUS_CODE.UnprocessableEntity);
     return next(error);

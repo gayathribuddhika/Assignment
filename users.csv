@@ -1,0 +1,3 @@
+__v,_id,contactNumber.mobileNumber,contactNumber.phoneNumber,country,createdAt,dateOfBirth,email,firstName,lastName,password,state,updatedAt,username
+0,619fb5555a31ce1b9c0878a9,715263699,912293552,Sri Lanka,2021-11-25T16:09:58.237Z,2021-11-10,sanduni@gmail.com,sanduni,udeshika,$2b$12$tpTg96Yq00QE1Y6KkZNCreaN1wDqsYi7n9nrT2k4FzV7vKGTgNx8S,Southern,2021-11-25T16:09:58.237Z,sanduni
+0,619fd096f7fae4435093b104,712584956,703954688,Sri Lanka,2021-11-25T18:06:15.039Z,2021-11-02,gaya123@gmail.com,Gayathri,Buddhika,$2b$12$jFD6rAbRj1AGpzw493a5I.LTwoNINz1j7kGwENuyFVV0.t2C.yxj2,Southern,2021-11-25T18:06:15.039Z,gayathri12
