@@ -4,60 +4,53 @@ import axios from 'axios';
 
 const AddUser = () => {
   
-  const [ form, setForm ] = useState({});
-  const [ errors, setErrors ] = useState({});
+  const [firstName, setfirstName] = useState("");
+  const [lastName, setlastName] = useState("");
+  const [username, setusername] = useState("");
+  const [password, setpassword] = useState("");
+  // const [confirm_password, setconfirm_password] = useState("")
+  const [dateOfBirth, setdateOfBirth] = useState("");
+  const [email, setemail] = useState("");
+  const [country, setcountry] = useState("");
+  const [state, setstate] = useState("");
+  const [phoneNumber, setphoneNumber] = useState("");
+  const [mobileNumber, setmobileNumber] = useState("");
 
-  const setField = (field, value) => {
-    setForm({
-      ...form,
-      [field]: value
-    })
-    // Check and see if errors exist, and remove them from the error object:
-    if ( !!errors[field] ) setErrors({
-      ...errors,
-      [field]: null
-    })
-  }
+  
+  // function passwordHandler(e) {
+  //   if(password.length < 8) {
+  //     setpasswordErr(true)
+  //   } else if (password !== confirm_password) {
+  //     setpasswordErr(true)
+  //   }
+  // }
 
   function submitForm(e) {
     e.preventDefault();
 
-    // // get our new errors
-    // const newErrors = findFormErrors()
-    // // Conditional logic:
-    // if ( Object.keys(newErrors).length > 0 ) {
-    //   // We got errors!
-    //   setErrors(newErrors)
-    // } else {
-    //   // No errors! Put any logic here for the form submission!
-    //   alert('Thank you for your feedback!')
-    // }
-    
-    console.log(form);
+    const newUser = {
+      firstName,
+      lastName,
+      username,
+      password,
+      // confirm_password,
+      dateOfBirth,
+      email,
+      country,
+      state,
+      contactNumber: {phoneNumber, mobileNumber}
+    }
+   
+    console.log(newUser);
 
-    axios.post("http://localhost:5000/api/users/create-user", form)
-    .then((res) => {
+    axios.post("http://localhost:5000/api/users/create-user", newUser)
+    .then(() => {
       alert("User Registered Successfully");
+      e.target.reset();
+      // console.log(res.data.msg);
     }).catch((err) => {
       console.log(err);
     })
-  }
-
-  const findFormErrors = () => {
-    const { username, email, password, confirm_password } = form
-    const newErrors = {}
-    // password errors
-    if (!password.length >= 8) newErrors.password = 'Password should be minimun 8 characters long'
-    else if (password !== confirm_password) newErrors.password = 'Password did not match'
-    // // food errors
-    // if ( !food || food === '' ) newErrors.food = 'select a food!'
-    // // rating errors
-    // if ( !rating || rating > 5 || rating < 1 ) newErrors.rating = 'must assign a rating between 1 and 5!'
-    // // comment errors
-    // if ( !comment || comment === '' ) newErrors.comment = 'cannot be blank!'
-    // else if ( comment.length > 100 ) newErrors.comment = 'comment is too long!'
-
-    return newErrors
   }
 
   return (
@@ -77,7 +70,7 @@ const AddUser = () => {
                   <Form.Control
                     type="firstname"
                     placeholder="Enter first name"
-                    onChange={(e) => setField("firstName", e.target.value)}
+                    onChange={(e) => {setfirstName(e.target.value)}}
                     required
                   />
                 </Form.Group>
@@ -88,7 +81,7 @@ const AddUser = () => {
                   <Form.Control
                     type="lastname"
                     placeholder="Enter Last name"
-                    onChange={(e) => setField("lastName", e.target.value)}
+                    onChange={(e) => {setlastName(e.target.value)}}
                     required
                   />
                 </Form.Group>
@@ -99,7 +92,7 @@ const AddUser = () => {
               <Form.Control
                 type="lastname"
                 placeholder="Enter a username"
-                onChange={(e) => setField("username", e.target.value)}
+                onChange={(e) => {setusername(e.target.value)}}
                 required
               />
             </Form.Group>
@@ -110,7 +103,7 @@ const AddUser = () => {
                   <Form.Control
                     type="password"
                     placeholder="Password"
-                    onChange={(e) => setField("password", e.target.value)}
+                    onChange={(e) => {setpassword(e.target.value)}}
                     required
                   />
                 </Form.Group>
@@ -135,7 +128,7 @@ const AddUser = () => {
               <Form.Control
                 type="birthday"
                 placeholder="Enter your birthday"
-                onChange={(e) => setField("dateOfBirth", e.target.value)}
+                onChange={(e) => {setdateOfBirth(e.target.value)}}
                 required
               />
             </Form.Group>
@@ -144,7 +137,7 @@ const AddUser = () => {
               <Form.Control
                 type="email"
                 placeholder="Enter email"
-                onChange={(e) => setField("email", e.target.value)}
+                onChange={(e) => {setemail(e.target.value)}}
                 required
               />
             </Form.Group>
@@ -155,7 +148,7 @@ const AddUser = () => {
                   <Form.Control
                     type="country"
                     placeholder="Enter your country"
-                    onChange={(e) => setField("country", e.target.value)}
+                    onChange={(e) => {setcountry(e.target.value)}}
                     required
                   />
                 </Form.Group>
@@ -166,7 +159,7 @@ const AddUser = () => {
                   <Form.Control
                     type="state"
                     placeholder="Enter state"
-                    onChange={(e) => setField("state", e.target.value)}
+                    onChange={(e) => {setstate(e.target.value)}}
                     required
                   />
                 </Form.Group>
@@ -179,7 +172,7 @@ const AddUser = () => {
                   <Form.Control
                     type="phone_number"
                     placeholder="Enter phone number"
-                    onChange={(e) => setField("phoneNumber", e.target.value)}
+                    onChange={(e) => {setphoneNumber(e.target.value)}}
                     required
                   />
                 </Form.Group>
@@ -190,7 +183,7 @@ const AddUser = () => {
                   <Form.Control
                     type="mobile"
                     placeholder="Enter mobile number"
-                    onChange={(e) => setField("mobileNumber", e.target.value)}
+                    onChange={(e) => {setmobileNumber(e.target.value)}}
                     required
                   />
                 </Form.Group>
