@@ -11,6 +11,19 @@ const userRoutes = require('./routes/user_route');
 
 const app = express();
 
+require("dotenv").config();
+const port = process.env.PORT || 5000;
+
+// database connection
+mongoose
+  .connect(process.env.DB_URI, {  
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  })
+  .then(() => console.log(msg.STATUS_MESSAGE.DB_CONN))
+  .catch((err) => console.log(err));
+
 // middlewares
 app.use(bodyParser.json());
 app.use(cors());
@@ -31,22 +44,10 @@ app.use((error, req, res, next) => {
   res.json({ message: error.message || msg.STATUS_MESSAGE.unknownError });
 });
 
-// database connection
-require("dotenv").config();
-const port = process.env.PORT || 5000;
-
-mongoose
-  .connect(process.env.DB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-  })
-  .then(() => console.log(msg.STATUS_MESSAGE.DB_CONN))
-  .catch((err) => console.log(err));
-
-
 // start the server
 app.listen(port, () =>
   console.log(`Server is running at http://localhost:${port}`)
 );
 
+
+module.exports = app;
